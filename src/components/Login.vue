@@ -6,17 +6,17 @@
               <img src="../assets/logo.png" alt="">
           </div>
           <!-- 登录表单区域 -->
-          <el-form label-width="80px" class="login-form">
-            <el-form-item label="账号">
-                <el-input prefix-icon="el-icon-user"></el-input>
+          <el-form :model="loginForm" ref="loginFormRef" label-width="80px" class="login-form" :rules="loginFormRules">
+            <el-form-item label="账号" prop="username">
+                <el-input v-model="loginForm.username" prefix-icon="el-icon-user"></el-input>
             </el-form-item>
-            <el-form-item label="密码">
-                <el-input prefix-icon="el-icon-lock"></el-input>
+            <el-form-item label="密码" prop="password">
+                <el-input v-model="loginForm.password" prefix-icon="el-icon-lock" show-password></el-input>
             </el-form-item>
             <!-- 登录 重置按钮 -->
             <el-row class="btns">
-                    <el-button type="primary">登录</el-button>
-                    <el-button type="danger">重置</el-button>
+                <el-button type="primary" @click="login">登录</el-button>
+                <el-button type="danger" @click="resetLoginForm">重置</el-button>
             </el-row>
           </el-form>
 
@@ -26,6 +26,41 @@
 
 <script>
 export default {
+  name: 'Login',
+  data () {
+    return {
+      loginForm: {
+        username: '',
+        password: ''
+      },
+      loginFormRules: {
+        username: [
+          { required: true, message: '请输入登录名称', trigger: 'blur' },
+          { min: 3, max: 8, message: '长度在 3 到 8 个字符', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+        ]
+      }
+
+    }
+  },
+  methods: {
+    resetLoginForm () {
+      this.$refs.loginFormRef.resetFields()
+    },
+    login () {
+      this.$refs.loginFormRef.validate(async (valid) => {
+        if (!valid) return
+        const { data: res } = await this.$http.post('login', this.loginForm)
+        console.log(res)
+        if (res.meta.status === 400) {
+          this.$message.error(res.meta.msg)
+        }
+      })
+    }
+  }
 
 }
 </script>

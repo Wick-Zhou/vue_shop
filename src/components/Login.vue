@@ -30,8 +30,8 @@ export default {
   data () {
     return {
       loginForm: {
-        username: '',
-        password: ''
+        username: 'admin',
+        password: '123456'
       },
       loginFormRules: {
         username: [
@@ -55,9 +55,12 @@ export default {
         if (!valid) return
         const { data: res } = await this.$http.post('login', this.loginForm)
         console.log(res)
-        if (res.meta.status === 400) {
-          this.$message.error(res.meta.msg)
+        if (res.meta.status !== 200) {
+          return this.$message.error(res.meta.msg)
         }
+        this.$message.success(res.meta.msg)
+        window.sessionStorage.setItem('token', res.data.token)
+        this.$router.push('/home')
       })
     }
   }

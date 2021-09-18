@@ -2,10 +2,10 @@
   <el-container>
     <!-- 头部区域 -->
     <el-header>
-        <div>
+          <div @click="returnWelcome" style="cursor: pointer">
             <img src="../assets/heima.png" alt="">
             <span>电商后台管理系统</span>
-        </div>
+          </div>
         <el-button type="info" @click="logout">退出</el-button>
     </el-header>
     <!-- 下面主体区 -->
@@ -71,6 +71,9 @@ export default {
     },
     changeCollapse () {
       this.isCollapse = !this.isCollapse
+    },
+    returnWelcome () {
+      this.$router.push('welcome')
     }
   },
   created () {

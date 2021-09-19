@@ -8,7 +8,7 @@
     <el-card>
         <el-button type="primary">添加角色</el-button>
         <el-table :data="roleslist" style="width: 100%" border stripe>
-            <!-- 第一列可展开栏 -->
+            <!-- 第一列可展开栏、、、 -->
             <!-- 展开栏的整体布局
                     三层权限一共分为2列(el一共分为24份)：
                         第一列为第一层权限(占5份)

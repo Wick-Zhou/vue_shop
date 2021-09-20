@@ -1,6 +1,6 @@
 <template>
   <div>
-      <el-breadcrumb separator-class="el-icon-arrow-right">
+    <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>商品管理</el-breadcrumb-item>
       <el-breadcrumb-item>商品分类</el-breadcrumb-item>
@@ -23,9 +23,9 @@
           <el-tag size="small" type="success" v-else-if="scope.row.cat_level===1">二级</el-tag>
           <el-tag size="small" type="warning" v-else>三级</el-tag>
         </template>
-        <template slot="operate">
-          <el-button type="primary" round icon="el-icon-edit" size="small">编辑</el-button>
-          <el-button type="danger" round icon="el-icon-delete" size="small">删除</el-button>
+        <template slot="operate" slot-scope="scope">
+          <el-button type="primary" round icon="el-icon-edit" size="small" @click="showEditCateDialog(scope.row)">编辑</el-button>
+          <el-button type="danger" round icon="el-icon-delete" size="small" @click="removeCate(scope.row)">删除</el-button>
         </template>
       </tree-table>
       <el-pagination
@@ -38,6 +38,7 @@
       :total="total">
       </el-pagination>
     </el-card>
+    <!-- 添加分类 -->
     <el-dialog
       title="添加分类"
       :visible.sync="addCateDialogVisible"
@@ -60,6 +61,22 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="addCateDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="addCate">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 编辑分类名称 -->
+    <el-dialog
+      title="修改分类"
+      :visible.sync="editCateDialogVisible"
+      width="50%"
+      @close="editCateDialogClose">
+      <el-form :model="editCateForm" :rules="editCateFormRules" ref="editCateFormRef" label-width="100px">
+        <el-form-item label="分类名称:" prop="cat_name">
+            <el-input v-model="editCateForm.cat_name"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editCateDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editCate">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -104,7 +121,17 @@ export default {
         expandTrigger: 'hover',
         checkStrictly: 'true'
       },
-      selectKeys: []
+      selectKeys: [],
+      editCateDialogVisible: false,
+      editCateForm: {
+        cat_name: '',
+        cat_id: ''
+      },
+      editCateFormRules: {
+        cat_name: [
+          { required: true, message: '请输入分类名称', trigger: 'blur' }
+        ]
+      }
     }
   },
   methods: {
@@ -156,6 +183,43 @@ export default {
         this.addCateDialogVisible = false
         this.getCateList()
       })
+    },
+    showEditCateDialog (cate) {
+      this.editCateDialogVisible = true
+      this.editCateForm.cat_name = cate.cat_name
+      this.editCateForm.cat_id = cate.cat_id
+      console.log(this.editCateForm)
+    },
+    editCate () {
+      this.$refs.editCateFormRef.validate(async valid => {
+        if (!valid) return
+        const { data: res } = await this.$http.put(`categories/${this.editCateForm.cat_id}`, { cat_name: this.editCateForm.cat_name })
+        if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+        this.$message.success(res.meta.msg)
+        this.editCateDialogVisible = false
+        this.getCateList()
+      })
+    },
+    editCateDialogClose () {
+      this.$refs.editCateFormRef.resetFields()
+      this.editCateForm.cat_name = ''
+      this.editCateForm.cat_id = ''
+    },
+    async removeCate (cate) {
+      const confirmResult = await this.$confirm('此操作将永久删除该分类, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch((err) => {
+        return err
+      })
+      if (confirmResult === 'cancel') {
+        return this.$message.info('已取消删除')
+      }
+      const { data: res } = await this.$http.delete(`categories/${cate.cat_id}`)
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.$message.success(res.meta.msg)
+      this.getCateList()
     }
   },
   created () {

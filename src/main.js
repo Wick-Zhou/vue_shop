@@ -4,6 +4,11 @@ import router from './router'
 import './plugins/element.js'
 import TreeTable from 'vue-table-with-tree-grid'
 
+import VueQuillEditor from 'vue-quill-editor'
+import 'quill/dist/quill.core.css' // import styles
+import 'quill/dist/quill.snow.css' // for snow theme
+import 'quill/dist/quill.bubble.css' // for bubble theme
+
 import './assets/css/global.css'
 
 import axios from 'axios'
@@ -14,6 +19,17 @@ axios.interceptors.request.use(config => {
 })
 Vue.prototype.$http = axios
 Vue.component('tree-table', TreeTable)
+Vue.filter('dateFormat', function (originVal) {
+  const dt = new Date(originVal)
+  const year = dt.getFullYear()
+  const month = dt.getMonth()
+  const day = dt.getDay()
+  const hour = dt.getHours()
+  const min = dt.getMinutes()
+  const sec = dt.getSeconds()
+  return `${year}-${month}-${day} ${hour}:${min}:${sec}`
+})
+Vue.use(VueQuillEditor /* { default global options } */)
 
 Vue.config.productionTip = false
 

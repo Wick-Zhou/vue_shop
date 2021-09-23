@@ -16,7 +16,7 @@
           :props="cascaderProps"
           @change="handleChange"
           clearable>
-          </el-cascader>
+        </el-cascader>
       </el-row>
       <template>
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
@@ -153,7 +153,7 @@ export default {
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       this.catelist = res.data
     },
-    async handleChange () {
+    handleChange () {
       if (this.selectKeys.length !== 3) {
         this.$message.error('请选择三级分类')
         this.selectKeys = []

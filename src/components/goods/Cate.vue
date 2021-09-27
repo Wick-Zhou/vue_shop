@@ -159,7 +159,6 @@ export default {
       this.parentCateList = res.data
     },
     parentCateChange () {
-      console.log(this.selectKeys)
       if (this.selectKeys.length > 0) {
         this.addCateForm.cat_pid = this.selectKeys[this.selectKeys.length - 1]
         this.addCateForm.cat_level = this.selectKeys.length
@@ -188,7 +187,6 @@ export default {
       this.editCateDialogVisible = true
       this.editCateForm.cat_name = cate.cat_name
       this.editCateForm.cat_id = cate.cat_id
-      console.log(this.editCateForm)
     },
     editCate () {
       this.$refs.editCateFormRef.validate(async valid => {

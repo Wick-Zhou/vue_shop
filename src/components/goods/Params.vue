@@ -196,7 +196,6 @@ export default {
     showEditDialog (form) {
       this.editDialogVisible = true
       this.editForm = form
-      console.log(this.editForm)
     },
     editDialogClose () {
       this.$refs.editFormRef.resetFields()

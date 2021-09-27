@@ -143,16 +143,13 @@ export default {
           item.attr_vals = item.attr_vals.length === 0 ? [] : item.attr_vals.split(' ')
         })
         this.manyTabData = res.data
-        // console.log(this.manyTabData)
       } else if (this.activeStep === '2') {
         const { data: res } = await this.$http.get(`categories/${this.addGoodForm.goods_cat[2]}/attributes`, { params: { sel: 'only' } })
         if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
         this.onlyTabData = res.data
-        // console.log(this.onlyTabData)
       }
     },
     handlePreview (file) {
-      console.log(file)
       this.previewPath = file.url
       this.previewDialogVisible = true
     },
@@ -160,7 +157,6 @@ export default {
       const filePath = file.response.data.tmp_path
       const i = this.addGoodForm.pics.findIndex(item => item.pic === filePath)
       this.addGoodForm.pics.splice(i, 1)
-      console.log(this.addGoodForm.pics)
     },
     handleUploadSuccess (res) {
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
@@ -168,7 +164,6 @@ export default {
         pic: res.data.tmp_path
       }
       this.addGoodForm.pics.push(picObj)
-      console.log(this.addGoodForm.pics)
     },
     add () {
       this.$refs.addGoodFormRef.validate(async valid => {
@@ -192,7 +187,6 @@ export default {
         form.goods_number = parseInt(form.goods_number)
         form.goods_price = parseInt(form.goods_price)
         form.goods_weight = parseInt(form.goods_weight)
-        console.log(form)
         const { data: res } = await this.$http.post('goods', form)
         if (res.meta.status !== 201) {
           return this.$message.error(res.meta.msg)

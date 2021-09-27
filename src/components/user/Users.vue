@@ -21,7 +21,7 @@
         </el-col>
       </el-row>
       <!-- 用户数据列表区 -->
-      <el-table  :data="userlist" style="width: 100%">
+      <el-table :data="userlist" style="width: 100%">
         <el-table-column type="index" label="#" width="80px"></el-table-column>
         <el-table-column prop="id" label="ID" width="100px"></el-table-column>
         <el-table-column prop="username" label="姓名" width="150px"></el-table-column>
@@ -236,7 +236,6 @@ export default {
     },
     // 修改用户列表中的状态并发送到数据库修改
     async userStateChange (userInfo) {
-      console.log(userInfo)
       const { data: res } = await this.$http.put(`users/${userInfo.id}/state/${userInfo.mg_state}`)
       if (res.meta.status !== 200) {
         userInfo.mg_state = !userInfo.mg_state
